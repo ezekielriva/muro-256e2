@@ -12,7 +12,7 @@ class App extends Component {
 
     return (
       <div className="App">
-        { !currentUser ? <Wall /> : <Login /> }
+        { currentUser ? <Wall /> : <Login /> }
       </div>
     );
   }

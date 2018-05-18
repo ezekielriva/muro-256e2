@@ -22,7 +22,7 @@ class WallForm extends Component {
     const post = {
       body:       this.state.body,
       visibility: this.state.visibility,
-      user_uid:   true || this.props.currentUser.uid
+      user_uid:   this.props.currentUser.uid
     }
     this.props.createPost(post)
     this.setState({body: '', visibility: 'public'});

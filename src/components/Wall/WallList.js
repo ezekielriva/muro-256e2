@@ -3,19 +3,25 @@ import { connect } from 'react-redux';
 
 import { WallVisibilityFilter } from "../../actions/uiActions";
 
+import WallPost from './WallPost';
+
+import { pick } from '../../utils';
+
 class WallList extends Component {
-  render() {
+  renderPosts() {
     const { wall } = this.props;
 
-    const list = wall.map((post, index) => (
-      <div className="WallList-post" key={`post-${index}`}>
-        <p>{post.body}</p>
-      </div>
-    )); 
-
+    return Object.keys(wall).map((key) => (
+      <WallPost
+        post={wall[key]}
+        key={key}
+      />
+    ));
+  }
+  render() {
     return (
       <div className="WallList">
-        {list}
+        {this.renderPosts()}
       </div>
     )
   }
@@ -24,9 +30,15 @@ class WallList extends Component {
 const selectWallByFilter = (wall, filter) => {
   switch(filter) {
     case WallVisibilityFilter.SHOW_FRIENDS:
-      return wall.filter(p => p.visibility === WallVisibilityFilter.SHOW_FRIENDS)
+      return pick (
+        wall,
+        Object.keys(wall).filter(id => wall[id].visibility === WallVisibilityFilter.SHOW_FRIENDS)
+      )
     case WallVisibilityFilter.SHOW_PUBLIC:
-      return wall.filter(p => p.visibility === WallVisibilityFilter.SHOW_PUBLIC)
+      return pick(
+        wall,
+        Object.keys(wall).filter(id => wall[id].visibility === WallVisibilityFilter.SHOW_PUBLIC)
+      )
     default:
       return wall;
   }
@@ -34,6 +46,6 @@ const selectWallByFilter = (wall, filter) => {
 
 const mapStateToProps = (state) => ({
   wall: selectWallByFilter(state.wall, state.ui.wallVisibilityFilter)
-})
+});
 
 export default connect(mapStateToProps, null)(WallList);
